@@ -29,7 +29,8 @@ Run locally and instantly predict outages, visualize trends, and get automated r
 ---
 
 ## 📸 UI Preview
-![UI Preview](https://github.com/Viraj-Pathak/cloud-failure-predictor/blob/main/docs/ui.png)
+![UI Preview](https://raw.githubusercontent.com/Viraj-Pathak/cloud-failure-predictor/main/assets/ui_preview.png)
+
 
 ---
 

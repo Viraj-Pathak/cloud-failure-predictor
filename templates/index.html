@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Cloud Failure Prediction & Auto Healing Assistant</title>
+<link rel="stylesheet" href="/static/style.css" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+<div class="container">
+
+<h1>Cloud Failure Prediction & Auto Healing Assistant</h1>
+<p class="subtitle">
+Enter live metrics for a server or service. The model will estimate failure risk in the next 10 minutes and suggest an action.
+</p>
+
+<form method="post" class="metrics-form">
+<div class="grid">
+  <div class="field">
+    <label>CPU usage %</label>
+    <input type="number" name="cpu" step="0.1" required />
+  </div>
+
+  <div class="field">
+    <label>Memory usage %</label>
+    <input type="number" name="memory" step="0.1" required />
+  </div>
+
+  <div class="field">
+    <label>Disk IO (MB/s)</label>
+    <input type="number" name="disk_io" step="0.1" required />
+  </div>
+
+  <div class="field">
+    <label>Network latency (ms)</label>
+    <input type="number" name="net_latency" step="0.1" required />
+  </div>
+
+  <div class="field">
+    <label>Error rate %</label>
+    <input type="number" name="error_rate" step="0.1" required />
+  </div>
+
+  <div class="field">
+    <label>Queue length</label>
+    <input type="number" name="queue_length" step="1" required />
+  </div>
+</div>
+
+<button type="submit" class="btn-primary">Predict failure risk</button>
+</form>
+
+
+{% if result is not none %}
+<div class="card result-card">
+  <h2>Prediction</h2>
+  <p>Failure probability in next 10 minutes: <b>{{ result }} %</b></p>
+
+  <p>Risk level:
+    <span class="badge">{{ level }}</span>
+  </p>
+
+  <p>Recommended action:
+    <br />{{ recommendation }}
+  </p>
+</div>
+{% endif %}
+
+
+<h2>History</h2>
+
+<canvas id="riskChart"></canvas>
+
+<script>
+const history = {{ history|tojson }};
+
+const labels = history.map(h => h.time);
+const risks = history.map(h => h.risk);
+
+const ctx = document.getElementById('riskChart');
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: labels,
+    datasets: [{
+      label: "Failure Risk %",
+      data: risks,
+      borderColor: "#0ff",
+      borderWidth: 3
+    }]
+  }
+});
+</script>
+
+<footer>
+<p>Built by Viraj Pathak - Cloud Reliability & AI</p>
+</footer>
+
+</div>
+</body>
+</html>
